@@ -1,0 +1,149 @@
+{
+  "$schema": "https://schemas.kiro.dev/steering/v1",
+  "version": "1.0.0",
+  "project": "Shadow Duel Arena",
+  "description": "Steering configuration for game development workflow",
+  
+  "preferences": {
+    "codeStyle": {
+      "tabWidth": 2,
+      "semi": true,
+      "singleQuote": false,
+      "trailingComma": "es5"
+    },
+    "framework": "React + TypeScript",
+    "backend": "Express + Devvit",
+    "storage": ["Redis", "KV Store"]
+  },
+
+  "patterns": {
+    "componentStructure": {
+      "description": "React component organization",
+      "guidelines": [
+        "Use functional components with hooks",
+        "Keep components under 200 lines",
+        "Extract logic to custom hooks",
+        "Use Tailwind CSS for styling",
+        "Include error handling UI"
+      ]
+    },
+    "apiStructure": {
+      "description": "Express API route organization",
+      "guidelines": [
+        "Use consistent error handling",
+        "Include try-catch blocks",
+        "Return proper status codes",
+        "Log errors to console",
+        "Type all request/response"
+      ]
+    },
+    "storagePatterns": {
+      "description": "Data persistence patterns",
+      "guidelines": [
+        "Redis for temporary data (games, online players)",
+        "KV Store for persistent data (profiles, shadows)",
+        "Always set TTL for Redis data",
+        "Handle cleanup for expired data",
+        "Use async/await throughout"
+      ]
+    }
+  },
+
+  "rules": [
+    {
+      "name": "Type Safety",
+      "description": "All functions must have proper TypeScript types",
+      "severity": "error",
+      "appliesTo": ["*.ts", "*.tsx"]
+    },
+    {
+      "name": "Error Handling",
+      "description": "All async operations must have try-catch blocks",
+      "severity": "error",
+      "appliesTo": ["src/server/**/*.ts"]
+    },
+    {
+      "name": "Component Props",
+      "description": "All React components must have proper Props interfaces",
+      "severity": "warning",
+      "appliesTo": ["src/client/components/**/*.tsx"]
+    },
+    {
+      "name": "Game Logic",
+      "description": "Game calculations must be deterministic and tested",
+      "severity": "error",
+      "appliesTo": ["src/server/game/**/*.ts"]
+    }
+  ],
+
+  "automations": [
+    {
+      "name": "Generate Types",
+      "description": "Auto-generate TypeScript types from game specs",
+      "trigger": "file_change",
+      "pattern": ".kiro/specs/*.json",
+      "action": "generate_types"
+    },
+    {
+      "name": "Format Code",
+      "description": "Auto-format on save",
+      "trigger": "save",
+      "action": "prettier"
+    },
+    {
+      "name": "Lint Check",
+      "description": "Run ESLint on file change",
+      "trigger": "file_change",
+      "action": "eslint_fix"
+    }
+  ],
+
+  "helpers": [
+    {
+      "name": "generateGameId",
+      "description": "Generate unique game ID",
+      "implementation": "Date.now() + '_' + Math.random().toString(36).substr(2, 9)"
+    },
+    {
+      "name": "clamp",
+      "description": "Clamp value between min and max",
+      "implementation": "Math.min(Math.max(value, min), max)"
+    },
+    {
+      "name": "calculateWinRate",
+      "description": "Calculate player win rate percentage",
+      "implementation": "Math.round((wins / battles) * 100)"
+    }
+  ],
+
+  "workflows": [
+    {
+      "name": "Add New Ability",
+      "steps": [
+        "1. Add ability definition to constants.ts",
+        "2. Implement in battleEngine.ts",
+        "3. Add to unlock conditions in progression.ts",
+        "4. Update UI in CharacterSelect and BattleScreen",
+        "5. Test with battle simulation"
+      ]
+    },
+    {
+      "name": "Deploy Update",
+      "steps": [
+        "1. npm run build",
+        "2. npm run type-check",
+        "3. devvit upload",
+        "4. Test on subreddit",
+        "5. Create demo post"
+      ]
+    }
+  ],
+
+  "notes": [
+    "This configuration enables Kiro to understand the project structure",
+    "Helps maintain consistency across 30+ files",
+    "Automates repetitive development tasks",
+    "Ensures quality standards throughout codebase"
+  ]
+}
+

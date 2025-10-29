@@ -1,0 +1,67 @@
+{
+  "$schema": "https://schemas.kiro.dev/specs/v1",
+  "name": "Game State Management",
+  "description": "Manages real-time game state for Shadow Duel Arena",
+  "entities": [
+    {
+      "name": "Player",
+      "fields": [
+        { "name": "userId", "type": "string", "required": true },
+        { "name": "username", "type": "string", "required": true },
+        { "name": "level", "type": "number", "default": 1 },
+        { "name": "xp", "type": "number", "default": 0 },
+        { "name": "rankPoints", "type": "number", "default": 0 },
+        { "name": "wins", "type": "number", "default": 0 },
+        { "name": "losses", "type": "number", "default": 0 },
+        { "name": "coins", "type": "number", "default": 500 },
+        { "name": "unlockedCharacters", "type": "string[]", "default": ["mage", "knight", "ranger"] },
+        { "name": "unlockedAbilities", "type": "string[]", "default": ["basic_attack", "defend", "fireball", "heal"] }
+      ]
+    },
+    {
+      "name": "GameState",
+      "fields": [
+        { "name": "gameId", "type": "string", "required": true },
+        { "name": "mode", "type": "string", "enum": ["quick_match", "ranked", "raid"] },
+        { "name": "player1", "type": "BattlePlayer", "required": true },
+        { "name": "player2", "type": "BattlePlayer" },
+        { "name": "currentTurn", "type": "string", "enum": ["player1", "player2"] },
+        { "name": "turnNumber", "type": "number", "default": 0 },
+        { "name": "status", "type": "string", "enum": ["waiting", "active", "finished"] },
+        { "name": "isShadowMatch", "type": "boolean", "default": false }
+      ]
+    },
+    {
+      "name": "RaidBoss",
+      "fields": [
+        { "name": "id", "type": "string", "required": true },
+        { "name": "hp", "type": "number", "required": true },
+        { "name": "maxHP", "type": "number", "required": true },
+        { "name": "phase", "type": "number", "default": 1 },
+        { "name": "participants", "type": "string[]", "default": [] },
+        { "name": "isActive", "type": "boolean", "default": true }
+      ]
+    }
+  ],
+  "operations": [
+    {
+      "name": "GetPlayer",
+      "description": "Retrieve player profile",
+      "input": { "userId": "string" },
+      "output": { "player": "Player" }
+    },
+    {
+      "name": "StartBattle",
+      "description": "Initialize a new battle",
+      "input": { "userId": "string", "mode": "string", "character": "string" },
+      "output": { "gameId": "string", "opponent": "BattlePlayer" }
+    },
+    {
+      "name": "SubmitMove",
+      "description": "Process player action in battle",
+      "input": { "gameId": "string", "ability": "string" },
+      "output": { "gameState": "GameState" }
+    }
+  ]
+}
+
